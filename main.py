@@ -21,8 +21,6 @@ def main():
         
         frame = cv2.flip(frame, 1)
         
-        
-        
         frame = poseDetector.find_pose(frame)
         frame = handsDetector.find_hands(frame)
         
