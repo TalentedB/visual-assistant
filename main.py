@@ -4,7 +4,6 @@ import mediapipe as mp
 import detect_pose
 
 def main():
-    print("Press 'q' to quit.")
     # Define a video capture object 
     vid = cv2.VideoCapture(0) 
 
@@ -18,7 +17,7 @@ def main():
         if not ret:
             break
         
-        cv2.imshow('MediaPipe Pose Detection', poseDetector.find_pose(frame))
+        cv2.imshow('MediaPipe Pose Detection', poseDetector.find_pose(cv2.flip(frame, 1)))
 
         # Check if the user pressed the 'q' key, if so quit.
         if cv2.waitKey(1) & 0xFF == ord('q'): 

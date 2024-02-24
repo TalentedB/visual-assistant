@@ -1,7 +1,8 @@
 import cv2
 import numpy as np
 import mediapipe as mp
-
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 
 
 """
@@ -16,17 +17,21 @@ class PoseDetector:
         self.pose = self.mp_pose.Pose(static_image_mode=static_image_mode, model_complexity=model_complexity, smooth_landmarks=smooth_landmarks, min_detection_confidence=min_detection_confidence, min_tracking_confidence=min_tracking_confidence)
 
     def find_pose(self, image, draw=True, convert_to_rgb=True):
-        if convert_to_rgb:
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            
-        self.results = self.pose.process(image)
+        
+        # Process the image and get the pose landmarks
+        self.results = self.pose.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
+        # Draw the pose landmarks on the image if draw is True
         if draw:
             if self.results.pose_landmarks:
                 image = self.draw_landmarks(image)
 
+        
         return image
 
+    """
+    draw_landmarks method draws the pose landmarks on the image.
+    """
     def draw_landmarks(self, image):
         pose_landmarks_list = self.results.pose_landmarks.landmark
         annotated_image = np.copy(image)
