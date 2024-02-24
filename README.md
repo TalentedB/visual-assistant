@@ -1,4 +1,4 @@
-# visual-assistant
+# Visual-Assistant
 
 ## Introduction
 
