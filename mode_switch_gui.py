@@ -12,7 +12,7 @@ class ModeSwitchGui(tk.Tk):
         self.__createGui__()
         
     def __createSelections__(self, selected=0):
-        fontSize = 20
+        fontSize = 10
         
         for i in range(len(self.modes)):
             if i == selected:
@@ -25,10 +25,10 @@ class ModeSwitchGui(tk.Tk):
             label.destroy()
         self.labels = []
     
-    def __createLabel__(self, fontSize=20, x=0, y=0, text="", bg="white"):
-        text = tk.Label(self, text=text, font=("Arial", fontSize), bg=bg)
-        text.place(x=x, y=y)
-        self.labels.append(text)
+    def __createLabel__(self, fontSize=10, x=0, y=0, text="", bg="white"):
+        label = tk.Label(self, text=text, font=("Arial", fontSize), bg=bg)
+        label.place(x=x-len(text)*fontSize/2, y=y)
+        self.labels.append(label)
 
     def __createGui__(self, override=True):
         
@@ -48,16 +48,21 @@ class ModeSwitchGui(tk.Tk):
         self.overrideredirect(override)
         
         self.attributes('-alpha', 1)
+        self.attributes('-topmost', True)
         
         # Create the selection labels
         self.__createSelections__()
         
         # Bind the tab key to switch the selection
         self.bind("<Tab>", self.switchSelection)
+        self.bind("<Escape>", self.destroyGUI)
         
         # Start the main loop
         self.mainloop()
-        
+    
+    def destroyGUI(self, event):
+        self.destroy()
+    
     def switchSelection(self, event):
         print("Switching selection")
         self.mode = (self.mode + 1) % len(self.modes)
@@ -67,8 +72,4 @@ class ModeSwitchGui(tk.Tk):
         self.update()
         
 
-
-
-thread = threading.Thread(target=ModeSwitchGui)
-thread.start()
 
