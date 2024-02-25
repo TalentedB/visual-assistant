@@ -7,7 +7,7 @@ import pyautogui
 
 import detect_pose
 import detect_hands
-import mode_switch_gui
+from mode_switch_gui import ModeSwitchGui
 import determine_gesture
 
 
@@ -43,28 +43,21 @@ def main():
                               "hands": handsDetector.results
                             }
         
-        # print(gestureDetector.detect_gesture(detected_landmarks["hands"]))
-        
         cv2.imshow('MediaPipe Pose Detection', frame)
 
         # Check if the user pressed the 'q' key, if so quit.
         if cv2.waitKey(1) & 0xFF == ord('q'): 
             break
-                
-        if cv2.waitKey(1) & 0xFF == ord('e'):
-            # gestureDetector.printHandLandmarksArray(detected_landmarks["hands"])
-            # print(gestureDetector.createHandDistanceArray(detected_landmarks["hands"].multi_hand_landmarks[0]))
-            # print(gestureDetector.detect_gesture(detected_landmarks["hands"].multi_hand_landmarks[0]))
-            pass
             
         if detected_landmarks["hands"].multi_hand_landmarks is not None:
             gesture = gestureDetector.detect_gesture(detected_landmarks["hands"].multi_hand_landmarks[0])
+            print(gesture)
             if gesture is not None:
                 if gesture == "fist" and lastFrameGesture != "fist":
                     if not isGuiOpen:
                         isGuiOpen = True
                         # Tkinter hates threading TODO: Figure out how to fix this
-                        guiThread = threading.Thread(target=mode_switch_gui.ModeSwitchGui, daemon=True)
+                        guiThread = threading.Thread(target=ModeSwitchGui, daemon=True)
                         guiThread.start()
                     else:
                         pyautogui.press('esc')
@@ -78,7 +71,7 @@ def main():
             isGuiOpen = False
             guiThread = None
         
-        sleep(0.5)
+        sleep(0.2)
 
     # Release the video capture object
     vid.release()
