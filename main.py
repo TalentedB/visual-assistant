@@ -38,14 +38,18 @@ def main():
         # Check if the user pressed the 'q' key, if so quit.
         if cv2.waitKey(1) & 0xFF == ord('q'): 
             break
-        
+
         if cv2.waitKey(1) & 0xFF == ord('w'): 
             if not isGuiOpen:
                 isGuiOpen = True
                 thread = threading.Thread(target=mode_switch_gui.ModeSwitchGui)
                 thread.start()
+
+        if thread is not None and not thread.is_alive():
+            isGuiOpen = False
+            thread = None
         
-        sleep(0.1)
+        # sleep(0.1)
 
     # Release the video capture object
     vid.release()
