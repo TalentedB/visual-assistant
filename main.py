@@ -3,22 +3,19 @@ import numpy as np
 import mediapipe as mp
 from time import sleep
 import threading
+import pyautogui
 
 import detect_pose
 import detect_hands
 import mode_switch_gui
 import determine_gesture
 
-isGuiOpen = False
-guiThread = None
-
-def open_gui():
-    if not isGuiOpen:
-        isGuiOpen = True
-        guiThread = threading.Thread(target=mode_switch_gui.ModeSwitchGui)
-        guiThread.start()
 
 def main():
+    isGuiOpen = False
+    guiThread = None
+    current_mode = 0
+    
     # Define a video capture object 
     vid = cv2.VideoCapture(0) 
 
@@ -53,22 +50,34 @@ def main():
         if cv2.waitKey(1) & 0xFF == ord('q'): 
             break
                 
-        # if cv2.waitKey(1) & 0xFF == ord('e'):
+        if cv2.waitKey(1) & 0xFF == ord('e'):
             # gestureDetector.printHandLandmarksArray(detected_landmarks["hands"])
             # print(gestureDetector.createHandDistanceArray(detected_landmarks["hands"].multi_hand_landmarks[0]))
             # print(gestureDetector.detect_gesture(detected_landmarks["hands"].multi_hand_landmarks[0]))
+            pass
             
-        
-        gesture = gestureDetector.detect_gesture(detected_landmarks["hands"].multi_hand_landmarks[0])
-        if gesture is not None and gesture == "fist":
-            open_gui()
+        if detected_landmarks["hands"].multi_hand_landmarks is not None:
+            gesture = gestureDetector.detect_gesture(detected_landmarks["hands"].multi_hand_landmarks[0])
+            if gesture is not None:
+                if gesture == "fist":
+                    if not isGuiOpen:
+                        isGuiOpen = True
+                        # Tkinter hates threading TODO: Figure out how to fix this
+                        guiThread = threading.Thread(target=mode_switch_gui.ModeSwitchGui)
+                        guiThread.start()
+                    else:
+                        pyautogui.press('esc')
+                        
+                elif gesture == "pinch":
+                    pyautogui.press('tab')
+                
         
         
         if guiThread is not None and not guiThread.is_alive():
             isGuiOpen = False
             guiThread = None
         
-        sleep(0.1)
+        sleep(0.2)
 
     # Release the video capture object
     vid.release()

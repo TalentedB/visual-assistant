@@ -22,7 +22,10 @@ class ModeSwitchGui(tk.Tk):
 
     def __destroyLabels__(self):
         for label in self.labels:
-            label.destroy()
+            try:
+                label.destroy()
+            except():
+                self.destroy()
         self.labels = []
     
     def __createLabel__(self, fontSize=10, x=0, y=0, text="", bg="white"):

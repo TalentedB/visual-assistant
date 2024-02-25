@@ -15,20 +15,25 @@ class gestureDetector:
         if hand_landmarks is None:
             return None
         
-        cur_distances = self.createHandDistanceArray(hand_landmarks)
+        cur_distances = {
+                         "relative": self.createHandDistanceArray(hand_landmarks),
+                         "absolute": self.createHandDistanceArray(hand_landmarks, False)
+                         }
         
-        for gesture_name, gesture_distances in self.gestures.items():
-            if len(gesture_distances) != len(cur_distances):
-                continue
-            
-            is_gesture = True
-            for idx, distance in enumerate(cur_distances):
-                if not self.within_threshold(distance, gesture_distances[idx], self.threshold):
-                    is_gesture = False
-                    break
-            
-            if is_gesture:
-                return gesture_name
+        
+        for gesture_type, gestures in self.gestures.items():
+            for gesture_name, gesture_distances in gestures.items():
+                if len(gesture_distances) != len(cur_distances[gesture_type]):
+                    continue
+                
+                is_gesture = True
+                for idx, distance in enumerate(cur_distances[gesture_type]):
+                    if not self.within_threshold(distance, gesture_distances[idx], self.threshold):
+                        is_gesture = False
+                        break
+                
+                if is_gesture:
+                    return gesture_name
         
         return None
     
@@ -55,7 +60,8 @@ class gestureDetector:
                 if relative:
                     output.append([dist([landmark1.x], [landmark2.x]), dist([landmark1.y], [landmark2.y])])
                 else:
-                    output.append(dist((landmark1.x, landmark1.y), (landmark2.x, landmark2.y)))
+                    # Setting second field to -1 to allow for same function use in relative and absolute mode
+                    output.append([dist([landmark1.x, landmark1.y], [landmark2.x, landmark1.y]), -1])
         return output
     
     def within_threshold(self, value1, value2, threshold, relative=True):
