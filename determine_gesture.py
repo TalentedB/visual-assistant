@@ -4,7 +4,7 @@ import json
 
 class gestureDetector:
     ROI = (100, 100, 300, 300) 
-    ignored_points = [9, 10, 11, 12, 13, 14, 15, 16]
+    ignored_points = []
     threshold = 0.1
     last_gesture_name = None
     last_gesture_distances = None

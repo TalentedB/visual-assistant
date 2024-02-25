@@ -6,6 +6,8 @@ import detect_pose
 import detect_hands
 from mode_switch_gui import ModeSwitchGui
 import determine_gesture
+from determine_action import actionHandler as actionHandlerClass
+
 overlayGui = None
 
 def main():
@@ -22,6 +24,8 @@ def main():
     handsDetector = detect_hands.HandDetector()
     gestureDetector = determine_gesture.gestureDetector()
     overlayGui = ModeSwitchGui()
+    actionHandler = actionHandlerClass(overlayGui)
+    
     detected_landmarks = {}
     
     while True: 
@@ -48,28 +52,13 @@ def main():
         
         if detected_landmarks["hands"].multi_hand_landmarks is not None:
             gesture = gestureDetector.detect_gesture(detected_landmarks["hands"].multi_hand_landmarks[0])
-
-            # TODO: This should be abstracted into a function (For example it would take in the mode we are in currently and the gesture and do the appropriate action)
-            if gesture is not None:
-                if gesture == "fist" and lastFrameGesture != "fist":
-                    if not isGuiOpen:
-                        isGuiOpen = True
-                        overlayGui.createGui()
-                        overlayGui.updateGui()
-                        
-                    elif isGuiOpen:
-                        overlayGui.destroyGUI()
-                        isGuiOpen = False
-                        
             
-                elif isGuiOpen and gesture == "pinch":
-                    overlayGui.switchSelection()
-                    overlayGui.updateGui()
+            actionHandler.handle_action(gesture, overlayGui)
                 
             lastFrameGesture = gesture
     
         
-        # sleep(0.2)
+        sleep(0.2)
 
     # Release the video capture object
     vid.release()
