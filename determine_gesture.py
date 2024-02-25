@@ -6,18 +6,33 @@ class gestureDetector:
     ROI = (100, 100, 300, 300) 
     ignored_points = [9, 10, 11, 12, 13, 14, 15, 16]
     threshold = 0.2
+    last_gesture_name = None
+    last_gesture_distances = None
     
     def __init__(self):
+        
+        # Load the gestures from the JSON file
         with open('gestures.json', 'r') as file:
             self.gestures = json.load(file)
-        
+    
     def detect_gesture(self, hand_landmarks):
+        """
+        Detects the gesture of a hand based on the landmarks provided.
+
+        Parameters:
+        hand_landmarks (list): The landmarks of the hand to detect the gesture of.
+
+        Returns:
+        str: The name of the gesture detected
+        """
+        
         if hand_landmarks is None:
             return None
         
+        # Create an array of distances between each landmark for both relative and absolute distances
         cur_distances = {
                          "relative": self.createHandDistanceArray(hand_landmarks),
-                         "absolute": self.createHandDistanceArray(hand_landmarks, False)
+                         "absolute": self.createHandDistanceArray(hand_landmarks, False),
                          }
         
         
@@ -37,8 +52,18 @@ class gestureDetector:
         
         return None
     
-    
     def printHandLandmarksArray(self, results, hands=[0, 1]):
+        """
+        Prints the landmarks of the hands provided in the results.
+        
+        Parameters:
+        results (mediapipe.python.solution_base.SolutionOutputs): The results of the hand detection model.
+        hands (list): The indices of the hands to print the landmarks of.
+        
+        Returns:
+        None
+        """
+        
         for hand_idx, hand_landmarks in enumerate(results.multi_hand_landmarks):
             if hand_idx not in hands:
                 continue
@@ -50,6 +75,17 @@ class gestureDetector:
             print("]")
             
     def createHandDistanceArray(self, hand_landmarks, relative=True):
+        """
+        Creates an array of distances between each landmark of the hand provided.
+        
+        Parameters:
+        hand_landmarks (mediapipe.python.solution_base.SolutionOutputs): The landmarks of the hand to create the distance array of.
+        relative (bool): Whether to create the distance array based on relative or absolute distances.
+        
+        Returns:
+        list: An array of distances between each landmark of the hand.
+        """
+        
         output = []
         # TODO: Optimize checking for ignored points 
         for idx1, landmark1 in enumerate(hand_landmarks.landmark):
@@ -67,6 +103,19 @@ class gestureDetector:
         return output
     
     def within_threshold(self, value1, value2, threshold, relative=True):
+        """
+        Determines if the two values are within the threshold provided.
+        
+        Parameters:
+        value1 (list or float): The first value to compare.
+        value2 (list or float): The second value to compare.
+        threshold (float): The threshold to compare the values to.
+        relative (bool): Whether the values are relative or absolute.
+        
+        Returns:
+        bool: Whether the two values are within the threshold provided.
+        """
+        
         if relative:
             return abs(value1[0] - value2[0]) < threshold and abs(value1[1] - value2[1]) < threshold
         return abs(value1 - value2) < threshold

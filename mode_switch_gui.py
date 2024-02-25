@@ -12,6 +12,13 @@ class ModeSwitchGui(tk.Tk):
         self.__createGui__()
         
     def __createSelections__(self, selected=0):
+        """
+        Creates the selection labels for the mode switcher.
+        
+        Parameters:
+        selected (int): The index of the selected mode.
+        """
+        
         fontSize = 10
         
         for i in range(len(self.modes)):
@@ -21,6 +28,10 @@ class ModeSwitchGui(tk.Tk):
                 self.__createLabel__(text=self.modes[i], x=self.height*i+100, y=self.height // 2 - fontSize)
 
     def __destroyLabels__(self):
+        """
+        Destroys all the labels in the mode switcher.
+        """
+        
         for label in self.labels:
             try:
                 label.destroy()
@@ -29,11 +40,28 @@ class ModeSwitchGui(tk.Tk):
         self.labels = []
     
     def __createLabel__(self, fontSize=10, x=0, y=0, text="", bg="white"):
+        """
+        Creates a label for the mode switcher.
+        
+        Parameters:
+        fontSize (int): The size of the font.
+        x (int): The x position of the label.
+        y (int): The y position of the label.
+        text (str): The text of the label.
+        bg (str): The background color of the label.
+        """
+        
         label = tk.Label(self, text=text, font=("Arial", fontSize), bg=bg)
         label.place(x=x-len(text)*fontSize/2, y=y)
         self.labels.append(label)
 
     def __createGui__(self, override=True):
+        """
+        Creates the GUI for the mode switcher.
+        
+        Parameters:
+        override (bool): Whether to override the window manager.
+        """
         
         # Initial Setup
         self.mode_label = tk.Label(self, textvariable=self.mode)
@@ -64,10 +92,15 @@ class ModeSwitchGui(tk.Tk):
         self.mainloop()
     
     def destroyGUI(self, event):
+        """
+        Destroys the GUI (Needed for the escape key to work).
+        """
         self.destroy()
     
     def switchSelection(self, event):
-        print("Switching selection")
+        """
+        Switches the selection of the mode switcher.
+        """
         self.mode = (self.mode + 1) % len(self.modes)
         self.__destroyLabels__()
         self.__createSelections__(self.mode)

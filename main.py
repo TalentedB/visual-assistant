@@ -78,7 +78,7 @@ def main():
             isGuiOpen = False
             guiThread = None
         
-        sleep(0.2)
+        sleep(0.5)
 
     # Release the video capture object
     vid.release()
