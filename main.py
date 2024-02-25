@@ -18,7 +18,9 @@ def main():
     handsDetector = detect_hands.HandDetector()
 
     isGuiOpen = False
-    thread = None
+    guiThread = None
+    
+    detected_landmarks = {}
     
     while True: 
         # Capture the video frame by frame 
@@ -32,6 +34,9 @@ def main():
         frame = poseDetector.find_pose(frame)
         frame = handsDetector.find_hands(frame)
         
+        detected_landmarks = {"body": handsDetector.results,
+                              "hands": handsDetector.results
+                            }
         
         cv2.imshow('MediaPipe Pose Detection', frame)
 
@@ -42,12 +47,12 @@ def main():
         if cv2.waitKey(1) & 0xFF == ord('w'): 
             if not isGuiOpen:
                 isGuiOpen = True
-                thread = threading.Thread(target=mode_switch_gui.ModeSwitchGui)
-                thread.start()
+                guiThread = threading.Thread(target=mode_switch_gui.ModeSwitchGui)
+                guiThread.start()
 
-        if thread is not None and not thread.is_alive():
+        if guiThread is not None and not guiThread.is_alive():
             isGuiOpen = False
-            thread = None
+            guiThread = None
         
         # sleep(0.1)
 
