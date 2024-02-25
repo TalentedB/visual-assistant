@@ -1,7 +1,7 @@
 import tkinter as tk
 import threading
 
-
+# This class can not inherit from Tkinter due to reviving issues.
 class ModeSwitchGui():
     modes = ["Zoom", "Selection", "Scroll", "Switch Window"]
     labels = []
