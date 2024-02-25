@@ -8,19 +8,21 @@ class actionHandler:
         self.lastFrameGesture = None
         self.isGuiOpen = False
         self.actions = {
-            "palm+full-pinch": self.zoom_in,
-            "full-pinch+palm": self.zoom_out,
-            }
+                        "Zoom": {
+                                "palm+full-pinch": self.zoom_in,
+                                "full-pinch+palm": self.zoom_out
+                                }
+                        }
 
-    def handle_action(self, gesture, overlayGui):
+    def handle_action(self, gesture, overlayGui, mode):
         if gesture is not None:
             self.handle_gui(gesture, overlayGui)
 
             if self.lastFrameGesture is not None:
                 action = self.encode_gesture(gesture)
                 print(action)
-                if action in self.actions:
-                    self.actions[action]()
+                if mode in self.actions and action in self.actions[mode]:
+                    self.actions[mode][action]()
             
             
         # TODO: Add the rest of the actions here

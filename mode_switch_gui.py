@@ -103,6 +103,7 @@ class ModeSwitchGui():
         self.mode = (self.mode + 1) % len(self.modes)
         self.__destroyLabels__()
         self.__createSelections__(self.mode)
+        return self.modes[self.mode]
         
         self.root.update()
     
