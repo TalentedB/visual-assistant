@@ -54,7 +54,8 @@ def main():
                 guiThread.start()
                 
         if cv2.waitKey(1) & 0xFF == ord('e'):
-            gestureDetector.printHandLandmarksArray(detected_landmarks["hands"])
+            # gestureDetector.printHandLandmarksArray(detected_landmarks["hands"])
+            print(gestureDetector.createDistanceArray(detected_landmarks["hands"].multi_hand_landmarks[0]))
 
         if guiThread is not None and not guiThread.is_alive():
             isGuiOpen = False
