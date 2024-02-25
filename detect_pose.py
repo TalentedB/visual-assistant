@@ -7,13 +7,14 @@ from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
+
 """
 PoseDetector class is a wrapper around MediaPipe's Pose model.
 The class provides a method to find the pose landmarks in an image.
 The class also provides a method to draw the pose landmarks on an image.
 """
 class PoseDetector:
-    def __init__(self, static_image_mode=False, model_complexity=1, smooth_landmarks=True, min_detection_confidence=0.5, min_tracking_confidence=0.5):
+    def __init__(self):
         base_options = python.BaseOptions(model_asset_path='pose_landmarker.task')
         options = vision.PoseLandmarkerOptions(
             base_options=base_options,

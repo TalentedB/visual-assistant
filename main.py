@@ -7,7 +7,7 @@ import threading
 import detect_pose
 import detect_hands
 import mode_switch_gui
-
+import determine_gesture
 
 def main():
     # Define a video capture object 
@@ -16,7 +16,8 @@ def main():
     # Initialize MediaPipe Pose Landmark Model
     poseDetector = detect_pose.PoseDetector()
     handsDetector = detect_hands.HandDetector()
-
+    gestureDetector = determine_gesture.gestureDetector()
+    
     isGuiOpen = False
     guiThread = None
     
@@ -31,12 +32,14 @@ def main():
         
         frame = cv2.flip(frame, 1)
         
-        frame = poseDetector.find_pose(frame)
-        frame = handsDetector.find_hands(frame)
+        # frame = poseDetector.find_pose(frame, False)
+        frame = handsDetector.find_hands(frame, False)
         
         detected_landmarks = {"body": handsDetector.results,
                               "hands": handsDetector.results
                             }
+        
+        # print(gestureDetector.detect_gesture(detected_landmarks["hands"]))
         
         cv2.imshow('MediaPipe Pose Detection', frame)
 
@@ -49,12 +52,15 @@ def main():
                 isGuiOpen = True
                 guiThread = threading.Thread(target=mode_switch_gui.ModeSwitchGui)
                 guiThread.start()
+                
+        if cv2.waitKey(1) & 0xFF == ord('e'):
+            gestureDetector.printHandLandmarksArray(detected_landmarks["hands"])
 
         if guiThread is not None and not guiThread.is_alive():
             isGuiOpen = False
             guiThread = None
         
-        # sleep(0.1)
+        sleep(0.1)
 
     # Release the video capture object
     vid.release()
