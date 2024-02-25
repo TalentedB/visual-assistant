@@ -1,6 +1,5 @@
 import cv2
 from time import sleep
-import pyautogui
 
 import detect_pose
 import detect_hands
@@ -58,7 +57,7 @@ def main():
             lastFrameGesture = gesture
     
         
-        sleep(0.2)
+        sleep(0.1)
 
     # Release the video capture object
     vid.release()
