@@ -9,6 +9,15 @@ import detect_hands
 import mode_switch_gui
 import determine_gesture
 
+isGuiOpen = False
+guiThread = None
+
+def open_gui():
+    if not isGuiOpen:
+        isGuiOpen = True
+        guiThread = threading.Thread(target=mode_switch_gui.ModeSwitchGui)
+        guiThread.start()
+
 def main():
     # Define a video capture object 
     vid = cv2.VideoCapture(0) 
@@ -17,9 +26,6 @@ def main():
     poseDetector = detect_pose.PoseDetector()
     handsDetector = detect_hands.HandDetector()
     gestureDetector = determine_gesture.gestureDetector()
-    
-    isGuiOpen = False
-    guiThread = None
     
     detected_landmarks = {}
     
@@ -33,7 +39,7 @@ def main():
         frame = cv2.flip(frame, 1)
         
         # frame = poseDetector.find_pose(frame, False)
-        frame = handsDetector.find_hands(frame, False)
+        frame = handsDetector.find_hands(frame, True)
         
         detected_landmarks = {"body": handsDetector.results,
                               "hands": handsDetector.results
@@ -46,17 +52,18 @@ def main():
         # Check if the user pressed the 'q' key, if so quit.
         if cv2.waitKey(1) & 0xFF == ord('q'): 
             break
-
-        if cv2.waitKey(1) & 0xFF == ord('w'): 
-            if not isGuiOpen:
-                isGuiOpen = True
-                guiThread = threading.Thread(target=mode_switch_gui.ModeSwitchGui)
-                guiThread.start()
                 
-        if cv2.waitKey(1) & 0xFF == ord('e'):
+        # if cv2.waitKey(1) & 0xFF == ord('e'):
             # gestureDetector.printHandLandmarksArray(detected_landmarks["hands"])
-            print(gestureDetector.createDistanceArray(detected_landmarks["hands"].multi_hand_landmarks[0]))
-
+            # print(gestureDetector.createHandDistanceArray(detected_landmarks["hands"].multi_hand_landmarks[0]))
+            # print(gestureDetector.detect_gesture(detected_landmarks["hands"].multi_hand_landmarks[0]))
+            
+        
+        gesture = gestureDetector.detect_gesture(detected_landmarks["hands"].multi_hand_landmarks[0])
+        if gesture is not None and gesture == "fist":
+            open_gui()
+        
+        
         if guiThread is not None and not guiThread.is_alive():
             isGuiOpen = False
             guiThread = None

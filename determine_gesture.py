@@ -1,29 +1,35 @@
 import mediapipe as mp
 from math import dist
+import json
 
 class gestureDetector:
     ROI = (100, 100, 300, 300) 
     ignored_points = [9, 10, 11, 12, 13, 14, 15, 16]
+    threshold = 0.2
     
+    def __init__(self):
+        with open('gestures.json', 'r') as file:
+            self.gestures = json.load(file)
+        
     def detect_gesture(self, hand_landmarks):
-        # Extract relevant landmarks (e.g., fingertips)
-        mp_hands = mp.solutions.hands
-        thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
-        index_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
-        middle_tip = hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP]
-        ring_tip = hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_TIP]
-        pinky_tip = hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP]
-
-        # Calculate centroid of the hand (average of all landmark positions)
-        centroid_x = (thumb_tip.x + index_tip.x + middle_tip.x + ring_tip.x + pinky_tip.x) / 5
-        centroid_y = (thumb_tip.y + index_tip.y + middle_tip.y + ring_tip.y + pinky_tip.y) / 5
-
-        # Check if centroid is within the ROI
-        if self.ROI[0] < centroid_x < self.ROI[0] + self.ROI[2] and self.ROI[1] < centroid_y < self.ROI[1] + self.ROI[3]:
-            # Check for a simple gesture (e.g., thumb and index finger pinched)
-            if thumb_tip.y < index_tip.y:
-                return "Pinch"
-
+        if hand_landmarks is None:
+            return None
+        
+        cur_distances = self.createHandDistanceArray(hand_landmarks)
+        
+        for gesture_name, gesture_distances in self.gestures.items():
+            if len(gesture_distances) != len(cur_distances):
+                continue
+            
+            is_gesture = True
+            for idx, distance in enumerate(cur_distances):
+                if not self.within_threshold(distance, gesture_distances[idx], self.threshold):
+                    is_gesture = False
+                    break
+            
+            if is_gesture:
+                return gesture_name
+        
         return None
     
     
@@ -38,17 +44,22 @@ class gestureDetector:
                 print(f"({landmark.x}, {landmark.y}),")
             print("]")
             
-    def createDistanceArray(self, hand_landmarks):
+    def createHandDistanceArray(self, hand_landmarks, relative=True):
         output = []
         for idx1, landmark1 in enumerate(hand_landmarks.landmark):
             if idx1 in self.ignored_points:
                 continue
             for idx2, landmark2 in enumerate(hand_landmarks.landmark):
-                if idx2 in self.ignored_points:
+                if idx2 in self.ignored_points or idx1 == idx2:
                     continue
-                output.append(dist((landmark1.x, landmark1.y), (landmark2.x, landmark2.y)))
+                if relative:
+                    output.append([dist([landmark1.x], [landmark2.x]), dist([landmark1.y], [landmark2.y])])
+                else:
+                    output.append(dist((landmark1.x, landmark1.y), (landmark2.x, landmark2.y)))
         return output
     
-    def within_threshold(self, value1, value2, threshold):
+    def within_threshold(self, value1, value2, threshold, relative=True):
+        if relative:
+            return abs(value1[0] - value2[0]) < threshold and abs(value1[1] - value2[1]) < threshold
         return abs(value1 - value2) < threshold
         
