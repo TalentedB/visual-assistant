@@ -1,8 +1,61 @@
 import cv2
+import time
 import numpy as np
 import mediapipe as mp
 
+from mediapipe import solutions
+from mediapipe.framework.formats import landmark_pb2
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 
+VisionRunningMode = mp.tasks.vision.RunningMode
+
+class HandDetector:
+    def __init__(self):
+        base_options = python.BaseOptions(model_asset_path='hand_landmarker.task')
+        options = vision.HandLandmarkerOptions (
+            base_options=base_options,
+            running_mode=VisionRunningMode.LIVE_STREAM,
+            result_callback=self.draw_landmarks
+            )
+        self.detector = vision.HandLandmarker.create_from_options(options)
+        
+    def find_hands(self, image, draw=True, convert_to_rgb=True):
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=image)
+
+        timestamp = int(round(time.time()*1000))
+        self.results = self.detector.detect_async(mp_image, timestamp)
+
+        # Draw the hand landmarks on the image if draw is True
+        if draw:
+            if self.results.pose_landmarks:
+                image = self.draw_landmarks(image)
+
+        return image
+
+    def draw_landmarks(self, rgb_image):
+        hand_landmarks_list = self.results.hand_landmarks
+        annotated_image = np.copy(rgb_image)
+
+        for idx in range(len(hand_landmarks_list)):
+            hand_landmarks = hand_landmarks_list[idx]
+
+
+            hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
+            hand_landmarks_proto.landmark.extend([
+            landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
+            ])
+
+            solutions.drawing_utils.draw_landmarks(
+                annotated_image,
+                hand_landmarks_proto,
+                solutions.hands.HAND_CONNECTIONS,
+                solutions.drawing_styles.get_default_hand_landmarks_style())
+        return annotated_image
+
+            
+
+'''''
 class HandDetector:
     def __init__(self, static_image_mode=False, max_num_hands=2, min_detection_confidence=0.5, min_tracking_confidence=0.5):
         self.mp_hands = mp.solutions.hands
@@ -46,3 +99,4 @@ class HandDetector:
         Closes the hands object. (Cleanup)
         """
         self.hands.close()
+'''

@@ -21,7 +21,7 @@ def main():
     vid = cv2.VideoCapture(0) 
 
     # Initialize MediaPipe Pose Landmark Model
-    poseDetector = detect_pose.PoseDetector()
+    #poseDetector = detect_pose.PoseDetector()
     handsDetector = detect_hands.HandDetector()
     gestureDetector = determine_gesture.gestureDetector()
     
