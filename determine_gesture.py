@@ -51,12 +51,14 @@ class gestureDetector:
             
     def createHandDistanceArray(self, hand_landmarks, relative=True):
         output = []
+        # TODO: Optimize checking for ignored points 
         for idx1, landmark1 in enumerate(hand_landmarks.landmark):
             if idx1 in self.ignored_points:
                 continue
             for idx2, landmark2 in enumerate(hand_landmarks.landmark):
                 if idx2 in self.ignored_points or idx1 == idx2:
                     continue
+                
                 if relative:
                     output.append([dist([landmark1.x], [landmark2.x]), dist([landmark1.y], [landmark2.y])])
                 else:

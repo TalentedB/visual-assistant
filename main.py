@@ -63,7 +63,7 @@ def main():
                     if not isGuiOpen:
                         isGuiOpen = True
                         # Tkinter hates threading TODO: Figure out how to fix this
-                        guiThread = threading.Thread(target=mode_switch_gui.ModeSwitchGui)
+                        guiThread = threading.Thread(target=mode_switch_gui.ModeSwitchGui, daemon=True)
                         guiThread.start()
                     else:
                         pyautogui.press('esc')
