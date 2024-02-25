@@ -88,14 +88,15 @@ class ModeSwitchGui(tk.Tk):
         self.bind("<Tab>", self.switchSelection)
         self.bind("<Escape>", self.destroyGUI)
         
-        # Start the main loop
-        self.mainloop()
+        self.update()
+    
     
     def destroyGUI(self, event):
         """
         Destroys the GUI (Needed for the escape key to work).
         """
         self.destroy()
+        self.update()
     
     def switchSelection(self, event):
         """
@@ -105,6 +106,7 @@ class ModeSwitchGui(tk.Tk):
         self.__destroyLabels__()
         self.__createSelections__(self.mode)
         
+        self.update()
         self.update()
         
 

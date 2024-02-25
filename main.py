@@ -1,19 +1,16 @@
 import cv2
-import numpy as np
-import mediapipe as mp
 from time import sleep
-import threading
 import pyautogui
 
 import detect_pose
 import detect_hands
 from mode_switch_gui import ModeSwitchGui
 import determine_gesture
-
+overlayGui = None
 
 def main():
     isGuiOpen = False
-    guiThread = None
+    global overlayGui
     current_mode = 0
     lastFrameGesture = None
     
@@ -51,28 +48,30 @@ def main():
         
         if detected_landmarks["hands"].multi_hand_landmarks is not None:
             gesture = gestureDetector.detect_gesture(detected_landmarks["hands"].multi_hand_landmarks[0])
-            print(gesture)
+
             if gesture is not None:
                 if gesture == "fist" and lastFrameGesture != "fist":
                     if not isGuiOpen:
                         isGuiOpen = True
-                        # TODO: Figure out how to fix this - Tkinter hates threading (Wants to be on the main loop)
-                        guiThread = threading.Thread(target=ModeSwitchGui)
-                        guiThread.start()
+                        overlayGui = ModeSwitchGui()
+                        overlayGui.update()
                         
                     else:
                         pyautogui.press('esc')
-                        guiThread.join()
+                        overlayGui.destroy()
+                        isGuiOpen = False
+                        
                 
                 # TODO: This should be abstracted into a function (For example it would take in the mode we are in currently and the gesture and do the appropriate action)
                 elif gesture == "pinch":
                     pyautogui.press('tab')
+                    overlayGui.update()
                 
             lastFrameGesture = gesture
         
         # reset gui tracking for mode switcher
-        if guiThread is not None and not guiThread.is_alive():
-            isGuiOpen = False
+        if overlayGui is not None:
+            overlayGui.update()
         
         sleep(0.2)
 
