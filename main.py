@@ -15,6 +15,7 @@ def main():
     isGuiOpen = False
     guiThread = None
     current_mode = 0
+    lastFrameGesture = None
     
     # Define a video capture object 
     vid = cv2.VideoCapture(0) 
@@ -59,7 +60,7 @@ def main():
         if detected_landmarks["hands"].multi_hand_landmarks is not None:
             gesture = gestureDetector.detect_gesture(detected_landmarks["hands"].multi_hand_landmarks[0])
             if gesture is not None:
-                if gesture == "fist":
+                if gesture == "fist" and lastFrameGesture != "fist":
                     if not isGuiOpen:
                         isGuiOpen = True
                         # Tkinter hates threading TODO: Figure out how to fix this
@@ -71,7 +72,7 @@ def main():
                 elif gesture == "pinch":
                     pyautogui.press('tab')
                 
-        
+            lastFrameGesture = gesture
         
         if guiThread is not None and not guiThread.is_alive():
             isGuiOpen = False
