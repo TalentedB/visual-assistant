@@ -49,6 +49,7 @@ def main():
         if detected_landmarks["hands"].multi_hand_landmarks is not None:
             gesture = gestureDetector.detect_gesture(detected_landmarks["hands"].multi_hand_landmarks[0])
 
+            # TODO: This should be abstracted into a function (For example it would take in the mode we are in currently and the gesture and do the appropriate action)
             if gesture is not None:
                 if gesture == "fist" and lastFrameGesture != "fist":
                     if not isGuiOpen:
@@ -60,8 +61,7 @@ def main():
                         overlayGui.destroyGUI()
                         isGuiOpen = False
                         
-                
-                # TODO: This should be abstracted into a function (For example it would take in the mode we are in currently and the gesture and do the appropriate action)
+            
                 elif isGuiOpen and gesture == "pinch":
                     overlayGui.switchSelection()
                     overlayGui.updateGui()
