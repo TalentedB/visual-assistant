@@ -55,6 +55,7 @@ def main():
             actionHandler.handle_action(gesture, overlayGui)
                 
             lastFrameGesture = gesture
+            print(gesture)
     
         
         sleep(0.1)

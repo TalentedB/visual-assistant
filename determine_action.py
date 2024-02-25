@@ -10,6 +10,7 @@ class actionHandler:
         self.actions = {
             "palm+full-pinch": self.zoom_in,
             "full-pinch+palm": self.zoom_out,
+            "scroll-up": self.scroll_up,
             }
 
     def handle_action(self, gesture, overlayGui):
@@ -18,7 +19,7 @@ class actionHandler:
 
             if self.lastFrameGesture is not None:
                 action = self.encode_gesture(gesture)
-                print(action)
+                #print(action)
                 if action in self.actions:
                     self.actions[action]()
             
@@ -50,3 +51,6 @@ class actionHandler:
     
     def zoom_out(self):
         pyautogui.hotkey('ctrl', '-')
+    
+    def scroll_up(self):
+        pyautogui.scroll(500)
