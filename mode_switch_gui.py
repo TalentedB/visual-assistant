@@ -2,14 +2,12 @@ import tkinter as tk
 import threading
 
 
-class ModeSwitchGui(tk.Tk):
+class ModeSwitchGui():
     modes = ["Zoom", "Selection", "Scroll", "Switch Window"]
     labels = []
     
-    def __init__(self):
-        super().__init__()
-        self.mode = 0
-        self.__createGui__()
+    def __init__(self, mode=0):
+        self.mode = mode
         
     def __createSelections__(self, selected=0):
         """
@@ -36,7 +34,7 @@ class ModeSwitchGui(tk.Tk):
             try:
                 label.destroy()
             except():
-                self.destroy()
+                pass
         self.labels = []
     
     def __createLabel__(self, fontSize=10, x=0, y=0, text="", bg="white"):
@@ -51,54 +49,54 @@ class ModeSwitchGui(tk.Tk):
         bg (str): The background color of the label.
         """
         
-        label = tk.Label(self, text=text, font=("Arial", fontSize), bg=bg)
+        label = tk.Label(self.root, text=text, font=("Arial", fontSize), bg=bg)
         label.place(x=x-len(text)*fontSize/2, y=y)
         self.labels.append(label)
 
-    def __createGui__(self, override=True):
+    def createGui(self, override=True):
         """
         Creates the GUI for the mode switcher.
         
         Parameters:
         override (bool): Whether to override the window manager.
         """
+        self.root = tk.Tk()
         
         # Initial Setup
-        self.mode_label = tk.Label(self, textvariable=self.mode)
-        self.mode_label.place()
-        self.after(20000, self.destroy)
-        self.title("Mode Switch")
+        self.root.after(20000, self.root.destroy)
+        self.root.title("Mode Switch")
         
         self.width = 200 * len(self.modes)
         self.height = 200
-        self.centerx = (self.winfo_screenwidth() // 2) - (self.width // 2)
-        self.centery = (self.winfo_screenheight() // 2) - (self.height // 2)
+        self.centerx = (self.root.winfo_screenwidth() // 2) - (self.width // 2)
+        self.centery = (self.root.winfo_screenheight() // 2) - (self.height // 2)
         
-        self.geometry('{}x{}+{}+{}'.format(self.width, self.height, self.centerx, self.centery))
+        self.root.geometry('{}x{}+{}+{}'.format(self.width, self.height, self.centerx, self.centery))
         
-        self.overrideredirect(override)
+        self.root.overrideredirect(override)
         
-        self.attributes('-alpha', 1)
-        self.attributes('-topmost', True)
+        self.root.attributes('-alpha', 1)
+        self.root.attributes('-topmost', True)
         
         # Create the selection labels
-        self.__createSelections__()
+        self.__createSelections__(self.mode)
         
         # Bind the tab key to switch the selection
-        self.bind("<Tab>", self.switchSelection)
-        self.bind("<Escape>", self.destroyGUI)
+        self.root.bind("<Tab>", self.switchSelection)
+        self.root.bind("<Escape>", self.destroyGUI)
         
-        self.update()
+        self.root.update()
     
     
-    def destroyGUI(self, event):
+    def destroyGUI(self, event=None):
         """
         Destroys the GUI (Needed for the escape key to work).
         """
-        self.destroy()
-        self.update()
+        self.__destroyLabels__()
+        self.root.destroy()
+        self.root.update()
     
-    def switchSelection(self, event):
+    def switchSelection(self, event=None):
         """
         Switches the selection of the mode switcher.
         """
@@ -106,8 +104,13 @@ class ModeSwitchGui(tk.Tk):
         self.__destroyLabels__()
         self.__createSelections__(self.mode)
         
-        self.update()
-        self.update()
+        self.root.update()
+    
+    def updateGui(self):
+        """
+        Updates the GUI.
+        """
+        self.root.update()
         
 
 

@@ -21,7 +21,7 @@ def main():
     poseDetector = detect_pose.PoseDetector()
     handsDetector = detect_hands.HandDetector()
     gestureDetector = determine_gesture.gestureDetector()
-    
+    overlayGui = ModeSwitchGui()
     detected_landmarks = {}
     
     while True: 
@@ -53,27 +53,23 @@ def main():
                 if gesture == "fist" and lastFrameGesture != "fist":
                     if not isGuiOpen:
                         isGuiOpen = True
-                        overlayGui = ModeSwitchGui()
-                        overlayGui.update()
+                        overlayGui.createGui()
+                        overlayGui.updateGui()
                         
-                    else:
-                        pyautogui.press('esc')
-                        overlayGui.destroy()
+                    elif isGuiOpen:
+                        overlayGui.destroyGUI()
                         isGuiOpen = False
                         
                 
                 # TODO: This should be abstracted into a function (For example it would take in the mode we are in currently and the gesture and do the appropriate action)
-                elif gesture == "pinch":
-                    pyautogui.press('tab')
-                    overlayGui.update()
+                elif isGuiOpen and gesture == "pinch":
+                    overlayGui.switchSelection()
+                    overlayGui.updateGui()
                 
             lastFrameGesture = gesture
+    
         
-        # reset gui tracking for mode switcher
-        if overlayGui is not None:
-            overlayGui.update()
-        
-        sleep(0.2)
+        # sleep(0.2)
 
     # Release the video capture object
     vid.release()
