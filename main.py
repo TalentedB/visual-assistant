@@ -43,12 +43,12 @@ def main():
                               "hands": handsDetector.results
                             }
         
-        cv2.imshow('MediaPipe Pose Detection', frame)
+        cv2.imshow('Tracking Camera', frame)
 
         # Check if the user pressed the 'q' key, if so quit.
         if cv2.waitKey(1) & 0xFF == ord('q'): 
             break
-            
+        
         if detected_landmarks["hands"].multi_hand_landmarks is not None:
             gesture = gestureDetector.detect_gesture(detected_landmarks["hands"].multi_hand_landmarks[0])
             print(gesture)
@@ -56,20 +56,23 @@ def main():
                 if gesture == "fist" and lastFrameGesture != "fist":
                     if not isGuiOpen:
                         isGuiOpen = True
-                        # Tkinter hates threading TODO: Figure out how to fix this
-                        guiThread = threading.Thread(target=ModeSwitchGui, daemon=True)
+                        # TODO: Figure out how to fix this - Tkinter hates threading (Wants to be on the main loop)
+                        guiThread = threading.Thread(target=ModeSwitchGui)
                         guiThread.start()
+                        
                     else:
                         pyautogui.press('esc')
-                        
+                        guiThread.join()
+                
+                # TODO: This should be abstracted into a function (For example it would take in the mode we are in currently and the gesture and do the appropriate action)
                 elif gesture == "pinch":
                     pyautogui.press('tab')
                 
             lastFrameGesture = gesture
         
+        # reset gui tracking for mode switcher
         if guiThread is not None and not guiThread.is_alive():
             isGuiOpen = False
-            guiThread = None
         
         sleep(0.2)
 
