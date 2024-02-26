@@ -2,6 +2,11 @@
 This file is used to create new gestures and add them to the gestures.json file.
 
 The user can create a new gesture by pressing the 'e' key and then entering the name of the gesture and if it is a relative or absolute distance.
+--------------------------------------------
+Hold e to grab your current gesture,
+Enter the name of the gesture,
+Describe whether it is relative or absolute,
+Repeat for every gesture you want to add
 """
 
 import cv2

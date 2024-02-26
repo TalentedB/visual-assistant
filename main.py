@@ -2,13 +2,15 @@ import cv2
 from time import sleep
 from time import time
 
-import detect_pose
 import detect_hands
 from mode_switch_gui import ModeSwitchGui
 import determine_gesture
 from determine_action import actionHandler as actionHandlerClass
 
 def getDiff(t1, t2):
+    """
+    Returns the absolute difference between t1 and t2.
+    """
     return abs(t1 - t2)
     
 def main():
