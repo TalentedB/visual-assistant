@@ -14,11 +14,11 @@ class actionHandler:
                                 "vertical-flap+vertical-flap": self.zoom_out
                                 },
                         "Switch Tab": {
-                                "horizontal-flap+horizontal-flap": self.browser_switch_tab,
-                                "pinch+pinch": self.select,
+                                "horizontal-flap+horizontal-flap": self.browser_switch_tab
                                 },
                         "Switch Window": {
-                                "horizontal-flap+horizontal-flap": self.switch_window
+                                "horizontal-flap+horizontal-flap": self.switch_window,
+                                "pinch+pinch": self.select
                                 },
                         "Element Select": {
                                 "horizontal-flap+horizontal-flap": self.tab_forward,
