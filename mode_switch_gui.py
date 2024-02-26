@@ -1,14 +1,21 @@
 import tkinter as tk
-import threading
 
 # This class can not inherit from Tkinter due to reviving issues.
 class ModeSwitchGui():
-    modes = ["Zoom", "Switch Tab", "Scroll", "Switch Window", "Browser Element Select", "None"]
+    modes = ["Zoom", "Switch Tab", "Scroll", "Switch Window", "Element Select", "Arrow Keys","None"]
     labels = []
     
     def __init__(self, mode=0):
         self.mode = mode
         
+        self.whichModeGui = tk.Tk()
+        self.whichModeGui.overrideredirect(True)
+        self.whichModeGui.attributes('-topmost', True)
+        self.whichModeGui.geometry('200x50+0+0')
+        self.whichModeGuiLabel = tk.Label(self.whichModeGui, text=self.modes[self.mode], font=("Arial", 10, "bold"))
+        self.whichModeGuiLabel.place(x=100-len(self.modes[self.mode])*10/2, y=25-10)
+        self.whichModeGui.update()
+             
     def __createSelections__(self, selected=0):
         """
         Creates the selection labels for the mode switcher.
@@ -87,7 +94,6 @@ class ModeSwitchGui():
         
         self.root.update()
     
-    
     def destroyGUI(self, event=None):
         """
         Destroys the GUI (Needed for the escape key to work).
@@ -103,15 +109,15 @@ class ModeSwitchGui():
         self.mode = (self.mode + 1) % len(self.modes)
         self.__destroyLabels__()
         self.__createSelections__(self.mode)
-        return self.modes[self.mode]
         
-        self.root.update()
-    
+        self.whichModeGuiLabel.config(text=self.modes[self.mode])
+        self.whichModeGuiLabel.place(x=100-len(self.modes[self.mode])*10/2 if 100-len(self.modes[self.mode])*10/2 > 0 else 100-len(self.modes[self.mode])*10/3, y=25-10)
+        self.whichModeGui.update()
+        
+        return self.modes[self.mode]
+   
     def updateGui(self):
         """
         Updates the GUI.
         """
         self.root.update()
-        
-
-

@@ -1,4 +1,3 @@
-import mediapipe as mp
 from math import dist
 import json
 
