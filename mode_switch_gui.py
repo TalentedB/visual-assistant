@@ -3,7 +3,7 @@ import threading
 
 # This class can not inherit from Tkinter due to reviving issues.
 class ModeSwitchGui():
-    modes = ["Zoom", "Selection", "Scroll", "Switch Window"]
+    modes = ["Zoom", "Switch Tab", "Scroll", "Switch Window", "Browser Element Select", "None"]
     labels = []
     
     def __init__(self, mode=0):

@@ -10,8 +10,24 @@ class actionHandler:
         self.isGuiOpen = False
         self.actions = {
                         "Zoom": {
-                                "palm+full-pinch": self.zoom_in,
-                                "full-pinch+palm": self.zoom_out
+                                "horizontal-flap+horizontal-flap": self.zoom_in,
+                                "vertical-flap+vertical-flap": self.zoom_out
+                                },
+                        "Switch Tab": {
+                                "horizontal-flap+horizontal-flap": self.browser_switch_tab,
+                                "pinch+pinch": self.select,
+                                },
+                        "Switch Window": {
+                                "horizontal-flap+horizontal-flap": self.switch_window
+                                },
+                        "Element Select": {
+                                "horizontal-flap+horizontal-flap": self.tab_forward,
+                                "vertical-flap+vertical-flap": self.tab_backwards,
+                                "pinch+pinch": self.select
+                                },
+                        "Scroll": {
+                                "vertical-flap+vertical-flap": self.scroll_up,
+                                "horizontal-flap+horizontal-flap": self.scroll_down
                                 }
                         }
 
@@ -19,11 +35,9 @@ class actionHandler:
         if gesture is not None:
             self.handle_gui(gesture, overlayGui)
 
-            if self.lastFrameGesture is not None:
+            if not self.isGuiOpen and self.lastFrameGesture is not None:
                 action = self.encode_gesture(gesture)
-                # print(action)
                 if self.mode in self.actions and action in self.actions[self.mode]:
-                    print("Doing Action: " + action)
                     self.actions[self.mode][action]()
             
             
@@ -48,9 +62,31 @@ class actionHandler:
         elif self.isGuiOpen and gesture == "pinch":
             self.mode = overlayGui.switchSelection()
             overlayGui.updateGui()
+
             
     def zoom_in(self):
         pyautogui.hotkey('ctrl', '+')
     
     def zoom_out(self):
         pyautogui.hotkey('ctrl', '-')
+    
+    def browser_switch_tab(self):
+        pyautogui.hotkey('ctrl', 'tab')
+    
+    def switch_window(self):
+        pyautogui.hotkey('ctrl', 'alt', 'tab')
+    
+    def tab_forward(self):
+        pyautogui.hotkey('tab')
+        
+    def tab_backwards(self):
+        pyautogui.hotkey('shift', 'tab')
+    
+    def select(self):
+        pyautogui.hotkey('enter')
+        
+    def scroll_up(self):
+        pyautogui.scroll(300)
+    
+    def scroll_down(self):
+        pyautogui.scroll(-300)
