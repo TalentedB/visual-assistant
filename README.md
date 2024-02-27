@@ -4,7 +4,7 @@
 
 This project aims to develop a gesture-based input system as an alternative to traditional mouse and trackpad interfaces. By leveraging hand gestures, Virtual Assistant intends to broaden the accessibility of computing devices beyond conventional input methods by facilitating learning engagement and intuitive technology interaction.   
 
-Our gesture-based computer control system aims to enhance the education experience for disabled and abled individuals of all age demographics. Our current implementation is designed to dismantle barriers faced by individuals with mobility challenges, cognitive/learning challenges, or a combination of both. In terms of physical disabilities, our current implementation is best-suited for users with fine-motor impairments, such as: arthritis, carpal tunnel syndrome, repetitive motion injuries, and temporary injuries. With regard to cognitive disabilities, our solution targets individuals with autism, adhd, and information-processing learning disabilities. In short, Virtual Assistant bypasses the fine-motor skills required by traditional computer input tools, such as the computer mouse, and facilitates learning engagement and accessible, intuitive technology use.
+Our gesture-based computer control system aims to enhance the education experience for disabled and abled individuals of all age demographics. Our current implementation is designed to dismantle barriers faced by individuals with mobility challenges, cognitive/learning challenges, or a combination of both. In terms of physical disabilities, our current implementation is best-suited for users with fine-motor impairments, such as: arthritis, carpal tunnel syndrome, repetitive motion injuries, and temporary injuries. With regard to cognitive disabilities, our solution targets individuals with autism, ADHD, and information-processing learning disabilities. In short, Virtual Assistant bypasses the fine-motor skills required by traditional computer input tools, such as the computer mouse, and facilitates learning engagement and accessible, intuitive technology use.
 
 ## Why Gesture-Based Input?
 
@@ -18,7 +18,7 @@ Our system targets individuals who struggle with attention retention, learning e
 ### Key Points
 - **Addressing Demand**: Aims to fill the gap in alternative input aids for mouse/trackpad usage.
 - **Wide Range of Potential Users**: Targets all age groups with particular emphasis on children, the elderly, and individuals with physical disabilities.
-- **Enhanced Learninhg Engagement**: Physical gestures are more engaging and intuitive compared to traditional input methods, thereby increasing user propensity to engage in active learning.
+- **Enhanced Learning Engagement**: Physical gestures are more engaging and intuitive compared to traditional input methods, thereby increasing user propensity to engage in active learning.
 - **Applications Beyond Educational Settings**: Expands usability to various domains beyond just educational environments.
 - **Reduction of Motor Fatigue/Injuries**: Offers relief from the strain of continuous mouse/trackpad usage.
 
@@ -37,9 +37,6 @@ Our system targets individuals who struggle with attention retention, learning e
 
 ### Current Features
 - **Swipe** and **Scroll**: Considerations include direction, speed, and scrolling amount.
-- **Zoom**: Implementing zoom functionality.
-- **Tabbing** through elements on the screen.
-- **Select (Click)**: Requires a secondary feedback mechanism in the absence of tactile feedback.
 - **Custom gesture implementation**: Users can add custom gestures (and subsequent functions) to fit diverse accesibility needs. 
 - **Dual-hand identification**: Users can customize gestures according to their dominant handedness, additionally, multi-hand gestures can be implemented.
 - **Built-in Functionalities**:
@@ -51,17 +48,17 @@ Our system targets individuals who struggle with attention retention, learning e
 
 
 ## Future Considerations
-- Incorporating fine motor control for diverse needs including sign language.
-- Expanding input modalities to include head/facial movements.
+- Incorporating **fine motor control** for diverse needs, such as sign language.
+- Expanding input modalities to include **head/facial movements**.
     - Specifically geared towards individuals with severe movement limitations. 
-- Customizability for users to select preferred gestures and functions.
-- Integration of speech-to-text for users with keyboard usage difficulties.
-- Integration of text-to-speech for users with sight challenges.
-- Universal "Help" gesture: performing the "Help" gesture in a given mode pulls up a "Help Menu", showcasing available gestures and functionalities for that specific mode. 
-- User tutorial: Upon initial start of application, Virtual Assistant launches a tutorial to walk the user through the built-in gestures and functionalities.
-- Cursor Control: Fully eliminate the need for a traditional computer mouse/trackpad by allowing users to control the cursor via gesture tracking.
-- Full-body customizable gestures.
-- Additional considerations concerning system capability expansion should be derived consultation with individuals with disabilities.      
+- Customizability for users to select **preferred gestures and functions**.
+- Integration of **speech-to-text** for users with keyboard usage difficulties.
+- Integration of **text-to-speech** for users with sight challenges.
+- **Universal "Help" gesture:** performing the "Help" gesture in a given mode pulls up a "Help Menu", showcasing available gestures and functionalities for that specific mode. 
+- **User tutorial:** Upon initial start of application, Virtual Assistant launches a tutorial to walk the user through the built-in gestures and functionalities.
+- **Cursor Control:** Fully eliminate the need for a traditional computer mouse/trackpad by allowing users to control the cursor via gesture tracking.
+- **Full-body** customizable gestures.
+- Additional considerations concerning system capability expansion should be derived from consultation with individuals with disabilities.      
   
 
 ## Installation
