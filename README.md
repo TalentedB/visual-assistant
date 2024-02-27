@@ -94,6 +94,7 @@ To install and use our gesture-based computer control system, follow these steps
 ## Current Limitations
 - The system is currently limited to only having one user on the camera at a time.
 - The gestures that are made must be recreated at the same distance and angle as the original gesture.
+- Due to library limitations with MediaPipe, **visual-assistant is not available for `MAC`**
 
 ## Creating Your Own Gestures
 0. Before creating your own gestures, unless you are adding to or replacing the preloaded gestures, you must delete the values within the `gestures.json` file, resetting the file to:
